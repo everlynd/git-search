@@ -88,13 +88,24 @@ export default {
         try {
           await fetch(`https://api.github.com/search/repositories?q=${this.queryString}`)
               .then(response => response.json())
-              .then(response => this.takenData = response.items)
+              .then(response => {
+                this.takenData = response.items
+                this.setLocation(this.queryString)
+              })
         } catch (e) {
           this.takenData = null
           this.inputError = 'Something was wrong'
           console.log(e)
         }
       }, 500);
+    },
+    setLocation(curLoc) {
+      try {
+        history.pushState(null, null, curLoc);
+        return;
+      } catch(e) {
+        location.hash = '#' + curLoc;
+      }
     }
   }
 }
